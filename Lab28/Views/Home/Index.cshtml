@@ -1,0 +1,42 @@
+﻿<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<input type="button" class="btn-primary" onclick="PullCard()" value="Pull Card" />
+<div id="deck">
+</div>
+
+<script>
+    var deckId = "";
+    //change deck id  and functions
+    $(document).ready(function () {
+        $.ajax({
+            url: 'https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1',
+            method: 'GET',
+            success: function (result) {
+                deckId = result.deck_id;
+                PullCard();
+            }
+        })
+    });
+    //funnction to be called in the main function
+    function PullCard() {
+
+        if (deckId !== "" || deckId !== 'undefined') {
+            $.ajax({
+                url: 'https://deckofcardsapi.com/api/deck/' + deckId + '/draw/?count=5',
+                method: 'GET',
+                success: function (result) {
+                    console.log(result);
+                    console.log(result);
+                    $('#deck').html("");
+                    //goes through cards and stops at 5 wich is set at the url above
+                    for (i = 0; i < result.cards.length; i++) {
+                        $('#deck').append('<div class="col-md-1 col-xs-19"><img src="' +
+                            result.cards[i].image + '"></div>');
+                    }
+                }
+            })
+        }
+    }
+
+
+</script>
