@@ -1,12 +1,28 @@
-﻿<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+﻿@{
+    ViewBag.Title = "Home Page";
+}
 
-<input type="button" class="btn-primary" onclick="PullCard()" value="Pull Card" />
-<div id="deck">
-</div>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<input type="button" class="btn btn-primary" value="Pull Card" onclick="PullCard()" />
+<input type="button" class="btn btn-primary" value="Reshuffle" onclick="Shuffle()" />
+<div id="deck"></div>
+
+<div class="col-md-12 col-xs-12"></div>
+<style>
+
+    img {
+        width: 180px;
+        height: 250px;
+    }
+
+    .card-name {
+        text-align: center;
+    }
+</style>
 
 <script>
     var deckId = "";
-    //change deck id  and functions
+
     $(document).ready(function () {
         $.ajax({
             url: 'https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1',
@@ -17,7 +33,7 @@
             }
         })
     });
-    //funnction to be called in the main function
+
     function PullCard() {
 
         if (deckId !== "" || deckId !== 'undefined') {
@@ -26,17 +42,29 @@
                 method: 'GET',
                 success: function (result) {
                     console.log(result);
-                    console.log(result);
-                    $('#deck').html("");
-                    //goes through cards and stops at 5 wich is set at the url above
+                    $('#deck').html('');
                     for (i = 0; i < result.cards.length; i++) {
-                        $('#deck').append('<div class="col-md-1 col-xs-19"><img src="' +
-                            result.cards[i].image + '"></div>');
+                        $('#deck').append('<div class="col-md-2 col-xs-12"><img src="' +
+                            result.cards[i].image + '"><div class="card-name">' + result.cards[i].value + ' ' +
+                            result.cards[i].suit + '</div></div>');
                     }
                 }
             })
         }
     }
 
+    function Shuffle() {
+
+        if (deckId !== "" || deckId !== 'undefined') {
+            $.ajax({
+                url: 'https://deckofcardsapi.com/api/deck/' + deckId + '/shuffle/',
+                method: 'GET',
+                success: function (result) {
+                    console.log(result);
+                    $('#deck').html('');
+                }
+            });
+        }
+    }
 
 </script>
